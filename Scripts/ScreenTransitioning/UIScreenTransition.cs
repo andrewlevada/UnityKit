@@ -1,32 +1,29 @@
-﻿using System.Collections;
-
-namespace UnityKit {
-    public class UIScreenTransition
-    {
-        private UIScreenTransitionBehaviour behaviour;
-        
-        public UIScreen.DoneCallback Callback { get; set; }
-
+﻿namespace UnityKit.ScreenTransitioning {
+    public class UIScreenTransition {
         private readonly UIScreen from;
         private readonly UIScreen to;
+        private readonly UIScreenTransitionBehaviour behaviour;
 
-        public void Perform() {
-            if (Callback != null) behaviour.TransitionIn(from, to, Callback);
-            else behaviour.TransitionIn(from, to);
-            Callback = null;
-        }
-
-        public void PerformBack() {
-            if (Callback != null) behaviour.TransitionOut(from, to, Callback);
-            else behaviour.TransitionOut(from, to);
-            Callback = null;
-        }
-
-        public UIScreenTransition(UIScreen from, UIScreen to, UIScreenTransitionBehaviour behaviour, UIScreen.DoneCallback callback = null) {
+        public UIScreenTransition(UIScreen from, UIScreen to, UIScreenTransitionBehaviour behaviour,
+            UIScreen.DoneCallback callback = null) {
             this.from = from;
             this.to = to;
             this.behaviour = behaviour;
-            this.Callback = callback;
+            this.callback = callback;
+        }
+
+        public UIScreen.DoneCallback callback { get; set; }
+
+        public void Perform() {
+            if (callback != null) behaviour.TransitionIn(from, to, callback);
+            else behaviour.TransitionIn(from, to);
+            callback = null;
+        }
+
+        public void PerformBack() {
+            if (callback != null) behaviour.TransitionOut(from, to, callback);
+            else behaviour.TransitionOut(from, to);
+            callback = null;
         }
     }
 }

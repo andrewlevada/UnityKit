@@ -1,37 +1,45 @@
 ﻿using UnityEngine;
 
-namespace UnityKit {
-
+namespace UnityKit.ScreenTransitioning {
+    /// <summary>
+    /// <para>Used for easy transitions between screens on canvas</para>
+    /// </summary>
     public class UIScreen : MonoBehaviour {
         public delegate void DoneCallback();
-        
+
         public UIScreenTransitionBehaviour behaviour;
 
-        public UIScreenTransition BackTransition { get; set; }
-        
+        private UIScreenTransition backTransition { get; set; }
+
         public void MoveTo(UIScreen to, DoneCallback callback) {
+            if (!gameObject.activeInHierarchy) return;
+            
             UIScreenTransition transition = new UIScreenTransition(this, to, behaviour, callback);
-            to.BackTransition = transition;
+            to.backTransition = transition;
             transition.Perform();
         }
-        
+
         public void MoveTo(UIScreen to) {
+            if (!gameObject.activeInHierarchy) return;
+            
             UIScreenTransition transition = new UIScreenTransition(this, to, behaviour);
-            to.BackTransition = transition;
+            to.backTransition = transition;
             transition.Perform();
         }
-        
+
         public void MoveBack(DoneCallback callback) {
-            if (BackTransition == null) return;
-            BackTransition.Callback = callback;
-            BackTransition.PerformBack();
-            BackTransition = null;
+            if (backTransition == null) return;
+            
+            backTransition.callback = callback;
+            backTransition.PerformBack();
+            backTransition = null;
         }
-        
+
         public void MoveBack() {
-            if (BackTransition == null) return;
-            BackTransition.PerformBack();
-            BackTransition = null;
+            if (backTransition == null) return;
+            
+            backTransition.PerformBack();
+            backTransition = null;
         }
     }
 }

@@ -1,13 +1,16 @@
-﻿using UnityEngine;
-using DG.Tweening;
+﻿using DG.Tweening;
+using UnityEngine;
 
-namespace UnityKit {
+namespace UnityKit.ScreenTransitioning {
     public class FadeOnUIScreenTransitionBehaviour : UIScreenTransitionBehaviour {
         public float speed;
 
         public override void TransitionIn(UIScreen from, UIScreen to, UIScreen.DoneCallback callback = null) {
             CanvasGroup canvasGroupFrom = from.GetComponent<CanvasGroup>();
-            canvasGroupFrom.DOFade(0f, speed).onComplete = () => from.gameObject.SetActive(false);
+            canvasGroupFrom.DOFade(0f, speed).onComplete = () => {
+                from.gameObject.SetActive(false);
+                canvasGroupFrom.alpha = 1f;
+            };
 
             to.gameObject.SetActive(true);
             CanvasGroup canvasGroupTo = to.GetComponent<CanvasGroup>();
@@ -22,7 +25,10 @@ namespace UnityKit {
             canvasGroupFrom.DOFade(1f, speed).onComplete = () => callback?.Invoke();
 
             CanvasGroup canvasGroupTo = to.GetComponent<CanvasGroup>();
-            canvasGroupTo.DOFade(0f, speed).onComplete = () => to.gameObject.SetActive(false);
+            canvasGroupTo.DOFade(0f, speed).onComplete = () => {
+                to.gameObject.SetActive(false);
+                canvasGroupTo.alpha = 1f;
+            };
         }
     }
 }
